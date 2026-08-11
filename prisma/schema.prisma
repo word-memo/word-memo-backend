@@ -1,0 +1,12 @@
+// https://pris.ly/d/prisma-schema
+// NestJS: moduleFormat = "cjs" (Prisma v7 default ESM breaks Nest CJS)
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
