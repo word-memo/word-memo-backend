@@ -1,8 +1,14 @@
+import { AuthProvider } from '@generated/prisma/enums';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { StringValue } from 'ms';
 import { JwtPayload, JwtTokenType, TokenPair } from '../types/jwt.types';
+
+type CreateTokenInput = {
+  userId: string;
+  authProvider: AuthProvider;
+};
 
 @Injectable()
 export class TokensService {
@@ -11,35 +17,42 @@ export class TokensService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createAccessToken(userId: string): Promise<string> {
-    return await this.signToken(userId, JwtTokenType.ACCESS);
+  async createAccessToken(input: CreateTokenInput): Promise<string> {
+    return this.signToken(input, JwtTokenType.ACCESS);
   }
 
-  async createRefreshToken(userId: string): Promise<string> {
-    return await this.signToken(userId, JwtTokenType.REFRESH);
+  async createRefreshToken(input: CreateTokenInput): Promise<string> {
+    return this.signToken(input, JwtTokenType.REFRESH);
   }
 
-  async createTokenPair(userId: string): Promise<TokenPair> {
+  async createTokenPair(input: CreateTokenInput): Promise<TokenPair> {
     const [accessToken, refreshToken] = await Promise.all([
-      this.createAccessToken(userId),
-      this.createRefreshToken(userId),
+      this.createAccessToken(input),
+      this.createRefreshToken(input),
     ]);
 
     return { accessToken, refreshToken };
   }
 
   async verifyAccessToken(token: string): Promise<JwtPayload> {
-    return await this.verifyToken(token, JwtTokenType.ACCESS);
+    return this.verifyToken(token, JwtTokenType.ACCESS);
   }
 
   async verifyRefreshToken(token: string): Promise<JwtPayload> {
-    return await this.verifyToken(token, JwtTokenType.REFRESH);
+    return this.verifyToken(token, JwtTokenType.REFRESH);
   }
 
-  private async signToken(userId: string, type: JwtTokenType): Promise<string> {
-    const payload: JwtPayload = { sub: userId, type };
+  private async signToken(
+    input: CreateTokenInput,
+    type: JwtTokenType,
+  ): Promise<string> {
+    const payload: JwtPayload = {
+      sub: input.userId,
+      authProvider: input.authProvider,
+      type,
+    };
 
-    return await this.jwtService.signAsync(payload, {
+    return this.jwtService.signAsync(payload, {
       secret: this.getSecret(type),
       expiresIn: this.getExpiresIn(type),
     });

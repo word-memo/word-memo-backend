@@ -48,11 +48,8 @@ model User {
   passwordHash String?
   firstName    String?
   lastName     String?
-  appLanguage  Language
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-
-  refreshToken String?
 
   profile Profile?
 

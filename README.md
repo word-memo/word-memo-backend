@@ -77,6 +77,21 @@ npm run docker:up
 
 ---
 
+## Path aliases
+
+| Alias | Path |
+| --- | --- |
+| `@/*` | `src/*` |
+| `@modules/*` | `src/modules/*` |
+| `@prisma/*` | `src/prisma/*` |
+| `@generated/*` | `src/generated/*` |
+
+Example: `import { PrismaService } from '@prisma/prisma.service'`.
+
+`tsc-alias` rewrites aliases in `dist` after build (needed for Node runtime).
+
+---
+
 ## Prisma
 
 Схема: `prisma/schema.prisma`  

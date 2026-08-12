@@ -1,3 +1,5 @@
+import { AuthProvider } from '@generated/prisma/enums';
+
 export enum JwtTokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
@@ -6,6 +8,7 @@ export enum JwtTokenType {
 export type JwtPayload = {
   sub: string;
   type: JwtTokenType;
+  authProvider: AuthProvider;
 };
 
 export type TokenPair = {
