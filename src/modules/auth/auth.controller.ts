@@ -7,12 +7,12 @@ import { TokenPair } from './types/jwt.types';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login/base')
+  @Post('base/login')
   async loginBase(@Body() loginBaseDto: LoginBaseDto): Promise<TokenPair> {
     return await this.authService.loginBase(loginBaseDto);
   }
 
-  @Post('register/base')
+  @Post('base/register')
   async registerBase(
     @Body() registerBaseDto: RegisterBaseDto,
   ): Promise<TokenPair> {
