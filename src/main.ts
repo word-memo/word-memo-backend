@@ -4,12 +4,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+const GLOBAL_API_PREFIX = 'api';
 const DEFAULT_PORT = 3000;
+
 const SWAGGER_API_PATH = 'docs';
 const DEFAULT_API_VERSION = '1.0.0';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.setGlobalPrefix(GLOBAL_API_PREFIX);
 
   app.useGlobalPipes(
     new ValidationPipe({
