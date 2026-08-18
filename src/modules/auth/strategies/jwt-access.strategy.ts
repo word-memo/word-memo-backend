@@ -1,4 +1,6 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AppException } from '@/common/errors/app.exception';
+import { ErrorCodes } from '@/common/errors/error-codes';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -20,7 +22,10 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt') {
       !payload.sub ||
       !payload.authProvider
     ) {
-      throw new UnauthorizedException('Invalid access token');
+      throw new AppException(
+        ErrorCodes.AUTH_INVALID_ACCESS_TOKEN,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return {

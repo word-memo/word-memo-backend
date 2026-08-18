@@ -1,5 +1,7 @@
+import { AppException } from '@/common/errors/app.exception';
+import { ErrorCodes } from '@/common/errors/error-codes';
 import { AuthProvider } from '@generated/prisma/enums';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { StringValue } from 'ms';
@@ -68,20 +70,29 @@ export class TokensService {
       });
 
       if (payload.type !== expectedType) {
-        throw new UnauthorizedException('Invalid token type');
+        throw new AppException(
+          ErrorCodes.AUTH_INVALID_TOKEN_TYPE,
+          HttpStatus.UNAUTHORIZED,
+        );
       }
 
       if (!payload.sub) {
-        throw new UnauthorizedException('Invalid token payload');
+        throw new AppException(
+          ErrorCodes.AUTH_INVALID_TOKEN_PAYLOAD,
+          HttpStatus.UNAUTHORIZED,
+        );
       }
 
       return payload;
     } catch (error) {
-      if (error instanceof UnauthorizedException) {
+      if (error instanceof AppException) {
         throw error;
       }
 
-      throw new UnauthorizedException('Invalid or expired token');
+      throw new AppException(
+        ErrorCodes.AUTH_INVALID_TOKEN,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 

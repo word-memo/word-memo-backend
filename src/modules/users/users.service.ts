@@ -1,6 +1,8 @@
+import { AppException } from '@/common/errors/app.exception';
+import { ErrorCodes } from '@/common/errors/error-codes';
 import { User } from '@/generated/prisma/client';
 import { AuthProvider } from '@/generated/prisma/enums';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/users.dto';
 import { UsersRepository } from './users.repository';
@@ -19,15 +21,17 @@ export class UsersService {
 
     if (authProvider === AuthProvider.base) {
       if (!password) {
-        throw new BadRequestException(
-          'Password is required for base authentication',
+        throw new AppException(
+          ErrorCodes.USER_PASSWORD_REQUIRED,
+          HttpStatus.BAD_REQUEST,
         );
       }
 
       passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
     } else if (password) {
-      throw new BadRequestException(
-        'Password is not allowed for OAuth authentication',
+      throw new AppException(
+        ErrorCodes.USER_PASSWORD_NOT_ALLOWED,
+        HttpStatus.BAD_REQUEST,
       );
     }
 
