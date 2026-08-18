@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { TokensService } from './tokens/tokens.service';
 import { JwtPayload, TokenPair } from './types/jwt.types';
-import { LoginBaseDto, RegisterBaseDto } from './dto/auth.dto';
+import { LoginBaseDto, RefreshDto, RegisterBaseDto } from './dto/auth.dto';
 import { UsersService } from '@/modules/users/users.service';
 import * as bcrypt from 'bcrypt';
 
@@ -66,6 +66,14 @@ export class AuthService {
     return await this.createTokenPair({
       userId: user.id,
       authProvider: user.authProvider,
+    });
+  }
+
+  async refresh({ refreshToken }: RefreshDto): Promise<TokenPair> {
+    const payload = await this.verifyRefreshToken(refreshToken);
+    return await this.createTokenPair({
+      userId: payload.sub,
+      authProvider: payload.authProvider,
     });
   }
 

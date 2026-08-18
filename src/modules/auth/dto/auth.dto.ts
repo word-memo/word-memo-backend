@@ -24,3 +24,10 @@ export class RegisterBaseDto {
   @ApiProperty()
   password: string;
 }
+
+export class RefreshDto {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  refreshToken: string;
+}

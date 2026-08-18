@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginBaseDto, RegisterBaseDto } from './dto/auth.dto';
+import { LoginBaseDto, RefreshDto, RegisterBaseDto } from './dto/auth.dto';
 import { TokenPair } from './types/jwt.types';
 
 @Controller('auth')
@@ -17,5 +17,10 @@ export class AuthController {
     @Body() registerBaseDto: RegisterBaseDto,
   ): Promise<TokenPair> {
     return await this.authService.registerBase(registerBaseDto);
+  }
+
+  @Post('refresh')
+  async refresh(@Body() refreshDto: RefreshDto): Promise<TokenPair> {
+    return await this.authService.refresh(refreshDto);
   }
 }

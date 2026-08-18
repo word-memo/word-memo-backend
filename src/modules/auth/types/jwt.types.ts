@@ -11,6 +11,11 @@ export type JwtPayload = {
   authProvider: AuthProvider;
 };
 
+export type JwtRequestUser = {
+  userId: string;
+  authProvider: AuthProvider;
+};
+
 export type TokenPair = {
   accessToken: string;
   refreshToken: string;
