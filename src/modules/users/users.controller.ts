@@ -4,6 +4,7 @@ import { ErrorCodes } from '@/common/errors/error-codes';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import type { JwtRequestUser } from '@/modules/auth/types/jwt.types';
 import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UsersService } from './users.service';
 
@@ -11,7 +12,8 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+  @Get('me')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async getCurrentUser(
     @CurrentUser() currentUser: JwtRequestUser,
