@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: word-memo-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "${PORT}:3000"
