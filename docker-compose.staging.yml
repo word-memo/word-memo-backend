@@ -10,7 +10,7 @@ services:
     environment:
       PORT: ${PORT}
       DATABASE_URL: ${DATABASE_URL}
-      DATABASE_CA_CERT_B64: ${DATABASE_CA_CERT_B64:-}
+      DATABASE_SSL_CA_B64: ${DATABASE_SSL_CA_B64:-}
     ports:
       - "${PORT}:3000"
     healthcheck:
