@@ -1,5 +1,6 @@
 import { AllExceptionsFilter } from '@/common/filters/all-exceptions.filter';
 import { AuthModule } from '@modules/auth/auth.module';
+import { HealthModule } from '@modules/health/health.module';
 import { UsersModule } from '@modules/users/users.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -12,6 +13,7 @@ import { PrismaModule } from '@prisma/prisma.module';
       isGlobal: true,
     }),
     PrismaModule,
+    HealthModule,
     UsersModule,
     AuthModule,
   ],

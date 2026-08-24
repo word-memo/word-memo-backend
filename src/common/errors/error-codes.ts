@@ -12,6 +12,7 @@
 export enum ErrorCodes {
   // 10xxx — common
   INTERNAL = 10000,
+  HEALTH_DB_UNAVAILABLE = 10001,
 
   // 11xxx — auth
   AUTH_INVALID_CREDENTIALS = 11001,
