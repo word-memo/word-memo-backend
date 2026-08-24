@@ -33,6 +33,14 @@ cp .env.example .env
 
 Проверь значения в `.env` (как минимум `PORT`, `DATABASE_URL`, креды Postgres).
 
+Для staging (DigitalOcean managed Postgres) CA из панели DO закодируй в одну строку и положи в `DATABASE_SSL_CA_B64`:
+
+```bash
+base64 -i ca-certificate.crt | tr -d '\n'
+```
+
+Файл сертификата в репозиторий и образ не клади. Локально переменная не нужна.
+
 ### 3. Поднять Postgres
 
 ```bash
