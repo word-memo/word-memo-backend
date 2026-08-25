@@ -31,6 +31,8 @@ export class PrismaService
       };
     }
 
+    console.log('poolConfig', poolConfig);
+
     const adapter = new PrismaPg(poolConfig);
     super({ adapter });
   }

@@ -19,7 +19,7 @@ export class HealthService {
       await this.prisma.$queryRaw`SELECT 1`;
       return { status: 'ok' };
     } catch (error) {
-      this.logger.error('Database health check failed', error);
+      console.log('Database health check failed:', error);
       throw new AppException(
         ErrorCodes.HEALTH_DB_UNAVAILABLE,
         HttpStatus.SERVICE_UNAVAILABLE,
