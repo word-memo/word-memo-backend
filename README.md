@@ -85,6 +85,40 @@ npm run docker:up
 
 ---
 
+## Staging deploy (DigitalOcean Droplet)
+
+Merge в `main` (или ручной Run workflow): GitHub Actions собирает образ, пушит в GHCR (`ghcr.io/word-memo/word-memo-backend`), Droplet только `docker pull` + `up`. `.env` на сервере не трогает. Контейнер сам делает `prisma migrate deploy` на старте.
+
+Org: Settings → Actions → General → Workflow permissions = **Read and write**. Иначе пуш в GHCR падает.
+
+### Один раз на Droplet
+
+```bash
+apt-get update && apt-get install -y rsync
+# .env уже лежит в /root/opt/word-memo-backend
+```
+
+Ключ только для GitHub Actions (на своём Mac):
+
+```bash
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github-actions-droplet -N ""
+ssh-copy-id -i ~/.ssh/github-actions-droplet.pub root@<DROPLET_IP>
+```
+
+### Secrets в GitHub
+
+Repo → Settings → Secrets and variables → Actions:
+
+| Secret | Значение |
+| --- | --- |
+| `DROPLET_HOST` | IP Droplet |
+| `DROPLET_USER` | `root` |
+| `DROPLET_SSH_KEY` | содержимое `~/.ssh/github-actions-droplet` (приватный ключ, целиком) |
+
+Приватный ключ в git не клади. Сначала добавь secrets, потом мержи в `main`.
+
+---
+
 ## Path aliases
 
 | Alias | Path |

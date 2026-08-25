@@ -1,8 +1,7 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${API_IMAGE:-ghcr.io/word-memo/word-memo-backend:latest}
+    pull_policy: always
     container_name: word-memo-api
     restart: unless-stopped
     env_file:
@@ -24,4 +23,4 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 20s
+      start_period: 40s
