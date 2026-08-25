@@ -1,98 +1,222 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="docs/logo-dark.png" width="120" alt="Word Memo logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h1 align="center">Word Memo Backend</h1>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  NestJS API для приложения изучения иностранных слов.<br />
+  PostgreSQL · Prisma · Docker
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Требования
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js 22+
+- npm
+- Docker + Docker Compose (для Postgres / полного стека)
 
-## Project setup
+## Быстрый старт (локальная разработка)
 
-```bash
-$ npm install
-```
-
-## Compile and run the project
+### 1. Клонировать и установить зависимости
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+`postinstall` сам выполнит `prisma generate`.
+
+### 2. Настроить окружение
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
+Проверь значения в `.env` (как минимум `PORT`, `DATABASE_URL`, креды Postgres).
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Для staging (DigitalOcean managed Postgres) CA из панели DO закодируй в одну строку и положи в `DATABASE_SSL_CA_B64`:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+base64 -i ca-certificate.crt | tr -d '\n'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Файл сертификата в репозиторий и образ не клади. Локально переменная не нужна.
 
-## Resources
+### 3. Поднять Postgres
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run docker:db
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Применить миграции (если уже есть)
 
-## Support
+```bash
+npm run prisma:deploy
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Если миграций ещё нет — см. раздел [Prisma](#prisma) ниже.
 
-## Stay in touch
+### 5. Запустить API
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run start:dev
+```
 
-## License
+Приложение слушает `PORT` из `.env` (по умолчанию `http://localhost:3000`).
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## Запуск через Docker (API + DB)
+
+```bash
+cp .env.example .env
+npm run docker:up
+```
+
+Полезные команды:
+
+| Команда | Что делает |
+| --- | --- |
+| `npm run docker:up` | Собрать и поднять `api` + `db` |
+| `npm run docker:db` | Только Postgres |
+| `npm run docker:logs` | Логи стека |
+| `npm run docker:down` | Остановить стек |
+
+В контейнере API `DATABASE_URL` указывает на хост `db` (сервис Compose). Локально в `.env` — на `localhost`.
+
+---
+
+## Staging deploy (DigitalOcean Droplet)
+
+Merge в `main` (или ручной Run workflow): GitHub Actions собирает образ, пушит в GHCR (`ghcr.io/word-memo/word-memo-backend`), Droplet только `docker pull` + `up`. `.env` на сервере не трогает. Контейнер сам делает `prisma migrate deploy` на старте.
+
+Org: Settings → Actions → General → Workflow permissions = **Read and write**. Иначе пуш в GHCR падает.
+
+### Один раз на Droplet
+
+```bash
+apt-get update && apt-get install -y rsync
+# .env уже лежит в /root/opt/word-memo-backend
+```
+
+Ключ только для GitHub Actions (на своём Mac):
+
+```bash
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github-actions-droplet -N ""
+ssh-copy-id -i ~/.ssh/github-actions-droplet.pub root@<DROPLET_IP>
+```
+
+### Secrets в GitHub
+
+Repo → Settings → Secrets and variables → Actions:
+
+| Secret | Значение |
+| --- | --- |
+| `DROPLET_HOST` | IP Droplet |
+| `DROPLET_USER` | `root` |
+| `DROPLET_SSH_KEY` | содержимое `~/.ssh/github-actions-droplet` (приватный ключ, целиком) |
+
+Приватный ключ в git не клади. Сначала добавь secrets, потом мержи в `main`.
+
+---
+
+## Path aliases
+
+| Alias | Path |
+| --- | --- |
+| `@/*` | `src/*` |
+| `@modules/*` | `src/modules/*` |
+| `@prisma/*` | `src/prisma/*` |
+| `@generated/*` | `src/generated/*` |
+
+Example: `import { PrismaService } from '@prisma/prisma.service'`.
+
+`tsc-alias` rewrites aliases in `dist` after build (needed for Node runtime).
+
+---
+
+## Prisma
+
+Схема: `prisma/schema.prisma`  
+Клиент генерируется в `src/generated/prisma` (в git не коммитится).
+
+### Генерация клиента
+
+Нужна после изменений схемы, после `npm install`, или если папки `src/generated/prisma` нет:
+
+```bash
+npm run prisma:generate
+```
+
+Эквивалент: `npx prisma generate`.
+
+### Миграции (разработка)
+
+Алгоритм после правки `prisma/schema.prisma`:
+
+1. Убедись, что Postgres запущен и `DATABASE_URL` в `.env` верный.
+2. Создай и примени миграцию:
+
+```bash
+npm run prisma:migrate
+```
+
+или с именем:
+
+```bash
+npx prisma migrate dev --name describe_your_change
+```
+
+3. Prisma:
+   - сравнит схему с БД;
+   - создаст SQL в `prisma/migrations/...`;
+   - применит миграцию к БД;
+   - заново сгенерирует клиент.
+
+4. Закоммить и схему, и папку `prisma/migrations`.
+
+### Миграции (уже существующая БД / CI / prod)
+
+Только применить уже созданные миграции, без интерактива:
+
+```bash
+npm run prisma:deploy
+```
+
+### Studio (опционально)
+
+UI для просмотра данных:
+
+```bash
+npm run prisma:studio
+```
+
+### Чеклист после изменения схемы
+
+1. Правишь `prisma/schema.prisma`
+2. `npm run prisma:migrate` (dev) → миграция + generate
+3. Проверяешь типы / код под новые модели
+4. Коммитишь `schema.prisma` + `prisma/migrations/**`
+
+Если миграцию создавать не нужно (только перегенерировать клиент после pull):
+
+```bash
+npm run prisma:generate
+```
+
+---
+
+## Скрипты npm
+
+| Скрипт | Описание |
+| --- | --- |
+| `npm run start:dev` | Dev-сервер с watch |
+| `npm run start:prod` | Prod из `dist` |
+| `npm run build` | Сборка Nest |
+| `npm run prisma:generate` | Генерация Prisma Client |
+| `npm run prisma:migrate` | `migrate dev` |
+| `npm run prisma:deploy` | `migrate deploy` |
+| `npm run prisma:studio` | Prisma Studio |
+| `npm run docker:up` | Docker: api + db |
+| `npm run docker:db` | Docker: только db |
+| `npm run docker:down` | Остановить Docker |
+| `npm run docker:logs` | Логи Docker |

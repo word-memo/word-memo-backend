@@ -1,0 +1,26 @@
+services:
+  api:
+    image: ${API_IMAGE:-ghcr.io/word-memo/word-memo-backend:latest}
+    pull_policy: always
+    container_name: word-memo-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_SSL_CA_B64: ${DATABASE_SSL_CA_B64:-}
+    ports:
+      - "${PORT}:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
